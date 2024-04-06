@@ -1,7 +1,9 @@
-name: CI
+name: Release Pull Request
 
 on:
   pull_request:
+    branches:
+      - main
 
 jobs:
   build:
@@ -31,14 +33,13 @@ jobs:
         run:
           sleep 30s && echo "${{ matrix.packages }} test done"
     
-  deploy-develop:
-    if: ${{ github.event.pull_request.base.ref == 'develop' }}
-    name: Deploy Develop
+  deploy-production:
+    name: Deploy Production
     needs: test
-    environment:
-      name: develop
-      url: https://develop.example.com
     runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://example.com
     strategy:
       matrix:
         packages: [backend, web, helper-web, service]
@@ -48,25 +49,3 @@ jobs:
       - name: Deploy
         run:
           sleep 30s && echo "${{ matrix.packages }} deploy done"
-  
-  deploy-staging:
-    if: ${{ github.event.pull_request.base.ref == 'main' }}
-    name: Deploy Staging
-    needs: test
-    environment:
-      name: staging
-      url: https://staging.example.com
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        packages: [backend, web, helper-web, service]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Deploy
-        run:
-          sleep 30s && echo "${{ matrix.packages }} deploy done"
-  
-        
-            
-    
