@@ -32,9 +32,10 @@ jobs:
       - name: Test
         run:
           sleep 30s && echo "${{ matrix.packages }} test done"
-          
+
   deploy-develop:
     name: Deploy Develop
+    needs: test
     environment:
       name: develop
       url: https://develop.example.com
