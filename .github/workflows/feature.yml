@@ -1,0 +1,41 @@
+name: Feature Merged
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:    
+  deploy-develop:
+    name: Deploy Develop
+    environment:
+      name: develop
+      url: https://develop.example.com
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        packages: [backend, web, helper-web, service]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Deploy
+        run:
+          sleep 30s && echo "${{ matrix.packages }} deploy done"
+  
+  deploy-staging:
+    name: Deploy Staging
+    needs: deploy-develop
+    environment:
+      name: staging
+      url: https://staging.example.com
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        packages: [backend, web, helper-web, service]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Deploy
+        run:
+          sleep 30s && echo "${{ matrix.packages }} deploy done"
+  
