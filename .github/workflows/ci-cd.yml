@@ -1,7 +1,9 @@
-name: CI
+name: CD/CD
 
 on:
   pull_request:
+    branches:
+      - develop
 
 jobs:
   build:
@@ -32,7 +34,6 @@ jobs:
           sleep 30s && echo "${{ matrix.packages }} test done"
     
   deploy-develop:
-    if: ${{ github.event.pull_request.base.ref == 'develop' }}
     name: Deploy Develop
     needs: test
     environment:
@@ -50,9 +51,8 @@ jobs:
           sleep 30s && echo "${{ matrix.packages }} deploy done"
   
   deploy-staging:
-    if: ${{ github.event.pull_request.base.ref == 'main' }}
     name: Deploy Staging
-    needs: test
+    needs: deploy-develop
     environment:
       name: staging
       url: https://staging.example.com
